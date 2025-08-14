@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Invoice & Payment Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/gridstack@8.2.0/dist/gridstack.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@8.2.0/dist/gridstack-h5.js"></script>
+
+</head>
+
+<body>
+    <header class="header" role="banner">
+        <img src="assets/logo.svg" alt="Logo" class="logo" loading="lazy">
+        <h1>Invoice & Payment Dashboard</h1>
+    </header>
+    <div class="grid-stack">
+        <main class="dashboard" role="main">
+            <!-- Company Profiles -->
+            <section id="company-panel" class="panel" aria-labelledby="company-h">
+                <div class="panel-header">
+                    <h2 id="company-h">Company Profiles</h2>
+                </div>
+
+
+                <form id="company-form" class="form" novalidate>
+                    <h3 id="company-form-title">Add Company</h3>
+                    <input id="company-name" name="company_name" type="text" placeholder="Company Name" required>
+                    <input id="company-address" name="company_address" type="text" placeholder="Address">
+                    <input id="company-email" name="company_email" type="email" placeholder="Email">
+                    <input id="company-phone" name="company_phone" type="tel" placeholder="Phone">
+                    <button type="button" id="save-preset" class="btn">Save</button>
+                    <button type="button" id="cancel-edit" class="btn hidden">Cancel</button>
+                </form>
+                <!-- <-- MOVE the list here, below header -->
+                <ul id="preset-list" class="list"></ul>
+            </section>
+
+            <!-- SMTP Accounts -->
+            <section id="mail-panel" class="panel" aria-labelledby="mail-h">
+                <h2 id="mail-h">SMTP Accounts</h2>
+                <form id="mail-form" class="form" novalidate>
+                    <input id="mail-email" name="email" type="email" placeholder="SMTP Email" required>
+                    <input id="mail-pass" name="password" type="password" placeholder="SMTP Password" required>
+                    <button type="button" id="verify-mail" class="btn">Verify</button>
+                    <span id="verify-status"></span>
+                </form>
+                <ul id="mail-list" class="list"></ul>
+            </section>
+
+            <!-- Create Invoice -->
+            <section id="create-panel" class="panel panel-wide" aria-labelledby="create-h">
+                <h2 id="create-h">Create Invoice</h2>
+                <form id="invoice-form" class="form" novalidate>
+                    <div class="form-group">
+                        <label for="invoice-client-search">Client</label>
+                        <input id="invoice-client-search" type="search" class="search" placeholder="Search clients…">
+                        <ul id="invoice-client-results" class="list"></ul>
+                        <div id="invoice-client-display" class="selected-item">No client selected</div>
+                        <input type="hidden" id="invoice-client-id" name="client_id">
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-product-search">Add Product</label>
+                        <input id="invoice-product-search" type="search" class="search" placeholder="Search products…">
+                        <ul id="invoice-product-results" class="list"></ul>
+                    </div>
+                    <div id="invoice-items" class="items"></div>
+                    <div class="form-group">
+                        <label for="invoice-date">Date</label>
+                        <input id="invoice-date" type="date" required>
+                    </div>
+                    <button type="submit" class="btn primary">Save Invoice</button>
+                    <p id="invoice-error" class="error" hidden role="alert"></p>
+                </form>
+            </section>
+
+            <!-- Clients -->
+            <section id="clients-panel" class="panel" aria-labelledby="clients-h">
+                <div class="panel-header">
+                    <h2 id="clients-h">Clients</h2>
+                    <input id="client-search" class="search" type="search" placeholder="Search clients…">
+                </div>
+                <form id="client-form" class="form" novalidate>
+                    <h3 id="client-form-title">Add Client</h3>
+                    <input name="name" placeholder="Name" required>
+                    <input name="email" type="email" placeholder="Email" required>
+                    <input name="address" placeholder="Address">
+                    <input name="phone" placeholder="Phone">
+                    <button type="submit" class="btn">Save Client</button>
+                </form>
+                <ul id="clients-list" class="list" aria-live="polite"></ul>
+            </section>
+
+            <!-- Products -->
+            <section id="products-panel" class="panel" aria-labelledby="products-h">
+                <div class="panel-header">
+                    <h2 id="products-h">Products</h2>
+                    <input id="product-search" class="search" type="search" placeholder="Search products…">
+                </div>
+                <form id="product-form" class="form" novalidate>
+                    <h3 id="product-form-title">Add Product</h3>
+                    <input name="name" placeholder="Name" required>
+                    <input name="description" placeholder="Description">
+                    <input name="price" type="number" step="0.01" placeholder="Price" required>
+                    <button type="submit" class="btn">Save Product</button>
+                </form>
+                <ul id="products-list" class="list" aria-live="polite"></ul>
+            </section>
+
+            <!-- Invoice History -->
+            <section id="invoices-panel" class="panel" aria-labelledby="invoices-h">
+                <div class="panel-header">
+                    <h2 id="invoices-h">Invoice History</h2>
+                    <input id="invoice-search" class="search" type="search" placeholder="Search invoices…">
+                </div>
+                <ul id="invoices-list" class="list invoices-list" aria-live="polite"></ul>
+            </section>
+        </main>
+    </div>
+    <div id="toasts" aria-live="assertive" aria-atomic="true"></div>
+    <div id="modal" class="hidden" role="dialog" aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card">
+            <p id="modal-text">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="modal-no" class="btn">No</button>
+                <button id="modal-yes" class="btn primary">Yes</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

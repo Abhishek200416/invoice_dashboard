@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Invoice #{{ invoice.id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static','css/invoice.css') }}" />
+  </head>
+  <body>
+    <header class="invoice-header">
+      <div class="company-info">
+        <h1>{{ invoice.company_name }}</h1>
+        {% if invoice.company_address %}<p>{{ invoice.company_address }}</p>{% endif %}
+        <p>
+          {% if invoice.company_email %}
+            <a href="mailto:{{ invoice.company_email }}">{{ invoice.company_email }}</a>
+          {% endif %}
+          {% if invoice.company_phone %} • {{ invoice.company_phone }}{% endif %}
+        </p>
+        <p>
+          <strong>Invoice #{{ invoice.id }}</strong> | {{ invoice.date }}
+        </p>
+      </div>
+      <div class="client-info">
+        <h2>Billed To:</h2>
+        <p>{{ invoice.client.name }}</p>
+        {% if invoice.client.address %}<p>{{ invoice.client.address }}</p>{% endif %}
+        <p><a href="mailto:{{ invoice.client.email }}">{{ invoice.client.email }}</a></p>
+      </div>
+    </header>
+
+    <main>
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th class="right">Qty</th>
+            <th class="right">Unit Price</th>
+            <th class="right">Line Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in invoice.items %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td class="right">{{ item.quantity }}</td>
+            <td class="right">₹{{ "%.2f"|format(item.unit_price) }}</td>
+            <td class="right">₹{{ "%.2f"|format(item.quantity*item.unit_price) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="right"><strong>Total Due</strong></td>
+            <td class="right"><strong>₹{{ "%.2f"|format(invoice.total) }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </main>
+
+    <footer class="invoice-footer">
+      <p>Thank you for your business!</p>
+      <p>{{ invoice.company_name }}{% if Config.SMTP_USERNAME %} • {{ Config.SMTP_USERNAME }}{% endif %}</p>
+    </footer>
+  </body>
+</html>

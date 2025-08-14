@@ -1,0 +1,471 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+:root {
+    --primary: #2c3e50;
+    --primary-alt: #1f2a38;
+    --accent: #e67e22;
+    --accent-dark: #d35400;
+    --bg: #f6f8fa;
+    --fg: #333;
+    --panel-bg: #fff;
+    --border: #dde2e6;
+    --radius: 8px;
+    --gap: 1rem;
+    --trans: 0.3s ease-in-out;
+    --shadow-l: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-s: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.5;
+    user-select: none;
+}
+
+
+/* ─── Date Picker Styling ───────────────────────────────────────────────── */
+
+
+/* Make the date-picker look like our other inputs */
+
+input[type="date"] {
+    /* remove native styling */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* inherit general input styles */
+    padding: .6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: .95rem;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23777' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h.5A1.5 1.5 0 0 1 15 2.5v11A1.5 1.5 0 0 1 13.5 15h-11A1.5 1.5 0 0 1 1 13.5v-11A1.5 1.5 0 0 1 2.5 1H3V.5a.5.5 0 0 1 .5-.5zM2 4v9.5a.5.5 0 0 0 .5.5H13.5a.5.5 0 0 0 .5-.5V4H2zm1-1h10v-.5a.5.5 0 0 0-1 0V3H4V2.5a.5.5 0 0 0-1 0V3zm5 3a.5.5 0 0 1 .5.5V8h1.5a.5.5 0 0 1 0 1H9.5v1.5a.5.5 0 0 1-1 0V9H7a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 1em 1em;
+    padding-right: 2.5rem;
+}
+
+
+/* Focus state consistent with other inputs */
+
+input[type="date"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(230, 126, 34, 0.3);
+    outline: none;
+}
+
+
+/* Header */
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: var(--gap);
+    background: linear-gradient(135deg, var(--primary-alt), var(--primary));
+    color: #fff;
+    box-shadow: var(--shadow-s);
+}
+
+.logo {
+    height: 44px;
+    margin-right: var(--gap);
+}
+
+
+/* Dashboard grid */
+
+.dashboard {
+    display: grid;
+    grid-template-areas: "company  mail     create" "clients  products history";
+    grid-template-columns: 1fr 1fr 1.4fr;
+    gap: var(--gap);
+    padding: var(--gap);
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-areas: "company" "mail" "clients" "products" "create" "history";
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* Assign areas */
+
+
+/* 1. Constrain the company panel to a fixed height, flex-layout */
+
+#company-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* fills its grid cell */
+    max-height: 100vh;
+    /* never exceed viewport */
+    grid-area: company;
+}
+
+
+/* 2. Make the list grow and scroll */
+
+#preset-list {
+    flex: 1;
+    /* take all available space between header & form */
+    overflow-y: auto;
+    margin: 0;
+    /* remove default top/bottom margin */
+    padding-right: 0.5rem;
+    /* avoid scrollbar overlapping text */
+    max-height: 300px;
+    /* optional cap */
+}
+
+
+/* 3. Push the form to the bottom */
+
+#company-form {
+    margin-top: 1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
+#mail-panel {
+    grid-area: mail;
+}
+
+#clients-panel {
+    grid-area: clients;
+}
+
+#products-panel {
+    grid-area: products;
+}
+
+#create-panel {
+    grid-area: create;
+}
+
+#invoices-panel {
+    grid-area: history;
+}
+
+
+/* Panel styling */
+
+.panel {
+    background: var(--panel-bg);
+    border-radius: var(--radius);
+    padding: var(--gap);
+    box-shadow: var(--shadow-l);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    transition: transform var(--trans), box-shadow var(--trans);
+}
+
+.panel:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-s);
+}
+
+.panel h2 {
+    margin: 0 0 .5rem;
+    font-weight: 600;
+    font-size: 1.3rem;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: .3rem;
+}
+
+
+/* Panel header */
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* Forms & inputs */
+
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+}
+
+.form h3 {
+    flex-basis: 100%;
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.form input,
+.form select,
+.form button {
+    padding: .6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: .95rem;
+    transition: border-color var(--trans), box-shadow var(--trans);
+}
+
+.form input:focus,
+.form select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(230, 126, 34, 0.3);
+    outline: none;
+}
+
+
+/* Buttons */
+
+.btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: .6rem 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--trans), transform var(--trans);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn.primary {
+    background: var(--primary);
+}
+
+.btn.danger {
+    background: #c0392b;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    background: var(--accent-dark);
+}
+
+
+/* Search inputs */
+
+.search {
+    padding: .5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: .95rem;
+    width: 140px;
+}
+
+
+/* Lists */
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    max-height: 320px;
+    /* New: cap at 5 items tall and scroll if longer */
+    max-height: calc(2.5rem * 5);
+    /* Your previous styles */
+    transition: background var(--trans);
+}
+
+.list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .6rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: background var(--trans);
+    gap: 10px;
+}
+
+.list li:hover {
+    background: rgba(230, 126, 34, 0.05);
+}
+
+
+/* Actions grouping */
+
+.client-actions,
+.product-actions,
+.invoice-actions {
+    display: flex;
+    gap: .5rem;
+}
+
+.client-actions .btn,
+.product-actions .btn,
+.invoice-actions .btn {
+    padding: .3rem .6rem;
+    font-size: .85rem;
+}
+
+
+/* Invoice form rows */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: .25rem;
+}
+
+
+/* Line items */
+
+.items {
+    display: grid;
+    gap: var(--gap);
+}
+
+.item-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: var(--gap);
+    align-items: center;
+}
+
+.item-row span {
+    padding-left: .4rem;
+}
+
+.item-row input {
+    width: 100%;
+}
+
+
+/* Error & toast */
+
+.error {
+    color: #c0392b;
+    font-weight: 600;
+    margin-top: .5rem;
+}
+
+#toasts {
+    position: fixed;
+    bottom: var(--gap);
+    right: var(--gap);
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.toast {
+    background: var(--primary);
+    color: #fff;
+    padding: .8rem 1.2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-s);
+    animation: fadein .3s, fadeout .3s 2.7s;
+}
+
+
+/* Modal */
+
+#modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+}
+
+#modal.hidden {
+    display: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-card {
+    background: var(--panel-bg);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-s);
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    animation: popin .2s ease-out;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-evenly;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+
+
+/* Keyframes */
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeout {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@keyframes popin {
+    from {
+        opacity: 0;
+        transform: scale(.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* show grab cursor on panel headers */
+
+.panel-header {
+    cursor: move;
+}
+
+
+/* show resize handles when hovering edges */
+
+.grid-stack-item {
+    position: relative;
+}
+
+.grid-stack-item:hover {
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+.grid-stack-item-content {
+    /* ensure resize cursors appear */
+    resize: both;
+    overflow: auto;
+}
